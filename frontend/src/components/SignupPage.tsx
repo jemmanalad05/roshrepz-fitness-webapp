@@ -2,7 +2,9 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 type SignupFormFields = {
-    name: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
     email: string;
     password: string;
     confirmPassword: string;
@@ -38,20 +40,59 @@ function SignupPage() {
                     </p>
                 </div>
 
-                {/* Name */}
+                {/* First and last name */}
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                    <div>
+                        <input
+                            {...register("firstName", {
+                                required: "First name is required.",
+                            })}
+                            type="text"
+                            autoComplete="given-name"
+                            placeholder="First name"
+                            className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                        />
+
+                        {errors.firstName && (
+                            <p className="mt-1 text-sm text-red-500">
+                                {errors.firstName.message}
+                            </p>
+                        )}
+                    </div>
+
+                    <div>
+                        <input
+                            {...register("lastName", {
+                                required: "Last name is required.",
+                            })}
+                            type="text"
+                            autoComplete="family-name"
+                            placeholder="Last name"
+                            className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                        />
+
+                        {errors.lastName && (
+                            <p className="mt-1 text-sm text-red-500">
+                                {errors.lastName.message}
+                            </p>
+                        )}
+                    </div>
+                </div>
+
+                {/* Date of birth */}
                 <div>
                     <input
-                        {...register("name", {
-                            required: "Name is required.",
+                        {...register("dateOfBirth", {
+                            required: "Date of birth is required.",
                         })}
-                        type="text"
-                        placeholder="Enter your name"
+                        type="date"
+                        autoComplete="bday"
                         className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                     />
 
-                    {errors.name && (
+                    {errors.dateOfBirth && (
                         <p className="mt-1 text-sm text-red-500">
-                            {errors.name.message}
+                            {errors.dateOfBirth.message}
                         </p>
                     )}
                 </div>
