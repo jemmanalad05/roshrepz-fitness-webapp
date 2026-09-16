@@ -8,20 +8,47 @@ type FormFields = {
 }
 
 function AuthPage() {
+    
+    // Navigate will be used for rendering dashboard later on.
+    //const navigate = useNavigate();
+    const [loginError, setLoginError] = useState("");
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormFields>();
+
 
     const [isLoading, setIsLoading] = useState(false)
 
     const onSubmit: SubmitHandler<FormFields> = async (data) => {
-        setIsLoading(true);
+    setIsLoading(true);
+    setLoginError("");
 
-        console.log(data);
+    try {
+        const response = await fetch("/users/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
 
-        // API request would go here
+    const result = await response.json();
 
-        setIsLoading(false);
+        if (response.ok) {
+        console.log(result.user);
+        console.log('User sucessfully logged in!')
         reset();
+
+        // Change this when you create the dashboard route:
+        // navigate("/dashboard");
+        return;
+        }
+
+        setLoginError(result.message);
+    } catch {
+        setLoginError("Unable to reach the server. Please try again.");
+    } finally {
+        setIsLoading(false);
+    }
     };
 
     const [showPassword, setShowPassword] = useState(false);
@@ -97,8 +124,11 @@ function AuthPage() {
                     {errors.password.message}
                 </p>}
 
-
+                {loginError && (
+                    <p className="text-sm text-red-500">{loginError}</p>
+                )}
                 <button
+                    
                     type="submit"
                     disabled={isLoading}
                     className="w-full rounded-lg bg-gray-900 py-3 font-semibold text-white transition 

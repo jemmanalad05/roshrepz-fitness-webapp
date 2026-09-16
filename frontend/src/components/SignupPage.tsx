@@ -24,7 +24,7 @@ function SignupPage() {
     } = useForm<SignupFormFields>();
 
     const onSubmit: SubmitHandler<SignupFormFields> = async (data) => {
-    const response = await fetch("http://localhost:3000/users/signup", {
+    const response = await fetch("/users/signup", {
         method: "POST",
         headers: {
         "Content-Type": "application/json",
