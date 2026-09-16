@@ -1,6 +1,6 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type SignupFormFields = {
     firstName: string;
@@ -14,6 +14,7 @@ type SignupFormFields = {
 function SignupPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const navigate = useNavigate();
 
     const {
         register,
@@ -35,6 +36,7 @@ function SignupPage() {
     console.log(result);
 
     if (response.ok) {
+        navigate("/login");
         reset();
     }
     };
