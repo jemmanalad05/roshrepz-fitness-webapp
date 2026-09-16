@@ -1,5 +1,7 @@
 const express = require('express')
 const router = express.Router()
+const pool = require("../config/database");
+const bcrypt = require("bcrypt");
 
 let users = [];
 
@@ -14,18 +16,46 @@ router.get('/new', (req,res) => {
     console.log("You are in '/users/new'")
 })
 
-router.post('/signup', (req, res) => {
-  users.push({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    dateOfBirth: req.body.dateOfBirth,
-    email: req.body.email,
-    password: req.body.password,
-  });
+router.post("/signup", async (req, res) => {
+  const {
+    firstName,
+    lastName,
+    dateOfBirth,
+    email,
+    password,
+    confirmPassword,
+  } = req.body;
 
-  console.log(users);
+  if (!firstName || !lastName || !dateOfBirth || !email || !password) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
 
-  res.status(201).json({ message: 'Account created!' });
+  if (password !== confirmPassword) {
+    return res.status(400).json({ message: "Passwords do not match." });
+  }
+
+  try {
+    const passwordHash = await bcrypt.hash(password, 12);
+
+    const [result] = await pool.execute(
+      `INSERT INTO users
+        (first_name, last_name, date_of_birth, email, password_hash)
+       VALUES (?, ?, ?, ?, ?)`,
+      [firstName, lastName, dateOfBirth, email, passwordHash]
+    );
+
+    res.status(201).json({
+      message: "Account created!",
+      userId: result.insertId,
+    });
+  } catch (error) {
+    if (error.code === "ER_DUP_ENTRY") {
+      return res.status(409).json({ message: "Email is already registered." });
+    }
+
+    console.error(error);
+    res.status(500).json({ message: "Could not create account." });
+  }
 });
 
 
