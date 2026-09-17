@@ -6,6 +6,7 @@ import AuthPage from "./components/AuthPage";
 import SignupPage from "./components/SignupPage";
 
 import BackgroundImage from "../assets/Background-image.png";
+import DashboardPage from "./components/DashboardPage";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<AuthPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
 
       <Footer />

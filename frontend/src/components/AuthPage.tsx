@@ -1,6 +1,6 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type FormFields = {
     email: string;
@@ -10,7 +10,7 @@ type FormFields = {
 function AuthPage() {
     
     // Navigate will be used for rendering dashboard later on.
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
     const [loginError, setLoginError] = useState("");
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormFields>();
@@ -34,12 +34,11 @@ function AuthPage() {
     const result = await response.json();
 
     if (response.ok) {
-    console.log(result.user);
-    console.log('User sucessfully logged in!')
-    reset();
+        console.log("User successfully logged in!");
+        console.log(result.token);
+        sessionStorage.setItem("token", result.token);
+        navigate("/dashboard");
 
-    // Change this when you create the dashboard route:
-    // navigate("/dashboard");
     return;
     }
         setLoginError(result.message);
