@@ -33,17 +33,20 @@ function AuthPage() {
 
     const result = await response.json();
 
-        if (response.ok) {
-        console.log(result.user);
-        console.log('User sucessfully logged in!')
-        reset();
+    if (response.ok) {
+    console.log(result.user);
+    console.log('User sucessfully logged in!')
+    reset();
 
-        // Change this when you create the dashboard route:
-        // navigate("/dashboard");
-        return;
-        }
-
+    // Change this when you create the dashboard route:
+    // navigate("/dashboard");
+    return;
+    }
         setLoginError(result.message);
+        reset({
+            email:data.email,
+            password:"",
+        });
     } catch {
         setLoginError("Unable to reach the server. Please try again.");
     } finally {
